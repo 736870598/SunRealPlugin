@@ -29,7 +29,7 @@ public class PackageParser15 extends PackageParser20 {
     public ActivityInfo generateActivityInfo(Object activity, int flags) throws Exception {
         /*   public static final ActivityInfo generateActivityInfo(Activity a, int flags) */
         return (ActivityInfo) ReflectMethodUtils.invokeStaticMethod(sPackageParserClass,
-                "generateActivityInfo",
+                "generateActivityInfo", false,
                 activity, flags);
     }
 
@@ -38,7 +38,7 @@ public class PackageParser15 extends PackageParser20 {
     public ServiceInfo generateServiceInfo(Object service, int flags) throws Exception {
         /*  public static final ServiceInfo generateServiceInfo(Service s, int flags)*/
         return (ServiceInfo) ReflectMethodUtils.invokeStaticMethod(sPackageParserClass,
-                "generateServiceInfo",
+                "generateServiceInfo", false,
                 service, flags);
     }
 
@@ -47,7 +47,7 @@ public class PackageParser15 extends PackageParser20 {
     public ProviderInfo generateProviderInfo(Object provider, int flags) throws Exception {
         /* public static final ProviderInfo generateProviderInfo(Provider p, int flags)  */
         return (ProviderInfo) ReflectMethodUtils.invokeStaticMethod(sPackageParserClass,
-                "generateProviderInfo",
+                "generateProviderInfo", false,
                 provider, flags);
     }
 
@@ -57,7 +57,7 @@ public class PackageParser15 extends PackageParser20 {
         /*     public static final InstrumentationInfo generateInstrumentationInfo(
             Instrumentation i, int flags) */
         return (InstrumentationInfo) ReflectMethodUtils.invokeStaticMethod(sPackageParserClass,
-                "generateInstrumentationInfo",
+                "generateInstrumentationInfo", false,
                 instrumentation, flags);
     }
 
@@ -65,11 +65,12 @@ public class PackageParser15 extends PackageParser20 {
     public ApplicationInfo generateApplicationInfo(int flags) throws Exception {
         /* public static ApplicationInfo generateApplicationInfo(Package p, int flags) */
         return (ApplicationInfo) ReflectMethodUtils.invokeStaticMethod(sPackageParserClass,
-                "generateApplicationInfo",
+                "generateApplicationInfo", false,
                 mPackage, flags);
     }
 
 
+    //TODO int gids[]????
     @Override
     public PackageInfo generatePackageInfo(
             int gids[], int flags, long firstInstallTime, long lastUpdateTime,
@@ -77,7 +78,7 @@ public class PackageParser15 extends PackageParser20 {
         /* public static PackageInfo generatePackageInfo(PackageParser.Package p,
             int gids[], int flags, long firstInstallTime, long lastUpdateTime) */
         return (PackageInfo) ReflectMethodUtils.invokeStaticMethod(sPackageParserClass,
-                "generatePackageInfo",
+                "generatePackageInfo", false,
                 mPackage, gids, flags, firstInstallTime, lastUpdateTime);
     }
 

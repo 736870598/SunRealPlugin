@@ -29,7 +29,7 @@ public class PackageParser16 extends PackageParser20 {
     public ActivityInfo generateActivityInfo(Object activity, int flags) throws Exception {
         /*public static final ActivityInfo generateActivityInfo(Activity a, int flags, boolean stopped, int enabledState, int userId)  */
         return (ActivityInfo) ReflectMethodUtils.invokeStaticMethod( sPackageParserClass,
-                "generateActivityInfo",
+                "generateActivityInfo", false,
                 activity, flags, mStopped, mEnabledState, mUserId);
     }
 
@@ -38,7 +38,7 @@ public class PackageParser16 extends PackageParser20 {
     public ServiceInfo generateServiceInfo(Object service, int flags) throws Exception {
         /*public static final ServiceInfo generateServiceInfo(Service s, int flags, boolean stopped, int enabledState, int userId)*/
         return (ServiceInfo) ReflectMethodUtils.invokeStaticMethod( sPackageParserClass,
-                "generateServiceInfo",
+                "generateServiceInfo", false,
                 service, flags, mStopped, mEnabledState, mUserId);
     }
 
@@ -48,7 +48,7 @@ public class PackageParser16 extends PackageParser20 {
         /*     public static final ProviderInfo generateProviderInfo(Provider p, int flags, boolean stopped,
             int enabledState, int userId)  */
         return (ProviderInfo) ReflectMethodUtils.invokeStaticMethod( sPackageParserClass,
-                "generateProviderInfo",
+                "generateProviderInfo", false,
                 provider, flags, mStopped, mEnabledState, mUserId);
     }
 
@@ -58,7 +58,7 @@ public class PackageParser16 extends PackageParser20 {
         /*   public static ApplicationInfo generateApplicationInfo(Package p, int flags,
             boolean stopped, int enabledState, int userId) */
         return (ApplicationInfo) ReflectMethodUtils.invokeStaticMethod( sPackageParserClass,
-                "generateApplicationInfo",
+                "generateApplicationInfo",false,
                 mPackage, flags, mStopped, mEnabledState, mUserId);
     }
 
@@ -70,7 +70,7 @@ public class PackageParser16 extends PackageParser20 {
             int gids[], int flags, long firstInstallTime, long lastUpdateTime,
             HashSet<String> grantedPermissions, boolean stopped, int enabledState, int userId)*/
         return (PackageInfo) ReflectMethodUtils.invokeMethod(sPackageParserClass,
-                "generatePackageInfo",
+                "generatePackageInfo", false,
                 mPackage, gids, flags, firstInstallTime, lastUpdateTime, grantedPermissions, mStopped, mEnabledState, mUserId);
     }
 }

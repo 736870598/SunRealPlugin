@@ -18,46 +18,46 @@ public class ReflectMethodUtils {
     /**
      * 创建类
      */
-    public static Object invokeConstructor(Class clazz, Object...args)
+    public static Object invokeConstructor(Class clazz, boolean isPackage, Object...args)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor constructor = clazz.getConstructor(args2Class(args));
+        Constructor constructor = clazz.getConstructor(args2Class(isPackage, args));
         return constructor.newInstance(args);
     }
 
     /**
      * 执行静态方法。
      */
-    public static Object invokeStaticMethod(Object object, String name, Object...args)
+    public static Object invokeStaticMethod(Object object, String name, boolean isPackage, Object...args)
             throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        return invokeStaticMethod(object.getClass(), name, args);
+        return invokeStaticMethod(object.getClass(), name, isPackage, args);
     }
 
     /**
      * 执行静态方法。
      */
-    public static Object invokeStaticMethod(Class clazz, String name, Object...args)
+    public static Object invokeStaticMethod(Class clazz, String name, boolean isPackage, Object...args)
             throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        Method method = findMethod(clazz, name, args);
+        Method method = findMethod(clazz, name, isPackage, args);
         return method.invoke(null, args);
     }
 
     /**
      * 执行普通非静态方法。
      */
-    public static Object invokeMethod(Object object, String name, Object...args)
+    public static Object invokeMethod(Object object, String name, boolean isPackage, Object...args)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = findMethod(object.getClass(), name, args);
+        Method method = findMethod(object.getClass(), name, isPackage, args);
         return method.invoke(object, args);
     }
 
     /**
      * 获取方法。
      */
-    public static Method findMethod(Class clazz, String name, Object...args) throws NoSuchMethodException {
-        String methodName = getMethodName(clazz, name);
+    public static Method findMethod(Class clazz, String name, boolean isPackage, Object...args) throws NoSuchMethodException {
+         String methodName = getMethodName(clazz, name);
         Method method = sMethodCache.get(methodName);
         if (method == null){
-            Class<?>[] classes = args2Class(args);
+            Class<?>[] classes = args2Class(isPackage, args);
             method = ReflectUtils.findMethod(clazz, name, classes);
             if (method != null){
                 sMethodCache.put(methodName, method);
@@ -76,14 +76,37 @@ public class ReflectMethodUtils {
     /**
      * 获取参数集合的class集合
      */
-    public static Class<?>[] args2Class(Object...args){
+    public static Class<?>[] args2Class(boolean isPackage, Object...args){
         if (args == null){
             return null;
         }
         int length = args.length;
         Class<?>[] classes = new Class[length];
         for (int i = 0; i < length; i++) {
-            classes[i] = args[i].getClass();
+            Class<?> aClass;
+            if (isPackage){
+                aClass = args[i].getClass();
+            }else{
+                if (args[i] instanceof Integer){
+                    aClass = int.class;
+                }
+                else if(args[i] instanceof Float){
+                    aClass = float.class;
+                }
+                else if(args[i] instanceof Double){
+                    aClass = double.class;
+                }
+                else if(args[i] instanceof Long){
+                    aClass = long.class;
+                }
+                else if(args[i] instanceof Short){
+                    aClass = short.class;
+                }
+                else{
+                    aClass = args[i].getClass();
+                }
+            }
+            classes[i] = aClass;
         }
         return classes;
     }

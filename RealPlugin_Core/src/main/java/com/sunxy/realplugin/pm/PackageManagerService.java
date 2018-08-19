@@ -14,6 +14,7 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.sunxy.realplugin.parser.PluginPackageMap;
 import com.sunxy.realplugin.utils.FileUtils;
@@ -73,6 +74,7 @@ public class PackageManagerService extends IPluginManager.Stub{
         //解析apk
         try {
             PluginPackageMap pluginPackageMap = new PluginPackageMap(mContext, new File(apkPath));
+            Log.v("sunxy", "--" + pluginPackageMap.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

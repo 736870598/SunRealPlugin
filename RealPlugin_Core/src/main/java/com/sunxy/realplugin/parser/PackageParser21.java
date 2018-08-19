@@ -88,7 +88,7 @@ public class PackageParser21 extends PackageParser {
             sPackageUserStateClass = Class.forName("android.content.pm.PackageUserState");
             mDefaultPackageUserState = sPackageUserStateClass.newInstance();
 
-            mUserId = (int) ReflectMethodUtils.invokeStaticMethod(UserHandle.class, "getCallingUserId");
+            mUserId = (int) ReflectMethodUtils.invokeStaticMethod(UserHandle.class, "getCallingUserId", true);
         }
 
     }
@@ -98,17 +98,14 @@ public class PackageParser21 extends PackageParser {
         //         PackageParser.parsePackage()
         mPackageParser = sPackageParserClass.newInstance();
         Method parsePackage = ReflectUtils.findMethod(mPackageParser, "parsePackage", File.class, int.class);
-        Method[] declaredMethods = mPackageParser.getClass().getDeclaredMethods();
-        mPackage = ReflectMethodUtils.invokeMethod(mPackageParser,
-                "parsePackage",
-                packageFile, flags);
+        mPackage = parsePackage.invoke(mPackageParser, packageFile, flags);
     }
 
     @Override
     public void collectCertificates(int flags) throws Exception {
         // public void collectCertificates(Package pkg, int flags) throws PackageParserException
         ReflectMethodUtils.invokeMethod(mPackageParser,
-                "collectCertificates",
+                "collectCertificates", false,
                 mPackage, flags);
     }
 
@@ -117,8 +114,9 @@ public class PackageParser21 extends PackageParser {
         /*   public static final ActivityInfo generateActivityInfo(Activity a, int flags,
             PackageUserState state, int userId) */
         return (ActivityInfo) ReflectMethodUtils.invokeStaticMethod(mPackageParser,
-                "generateActivityInfo",
-                activity, flags, mDefaultPackageUserState, mUserId);
+                "generateActivityInfo", false,
+                activity, flags, mDefaultPackageUserState, mUserId
+                );
     }
 
     @Override
@@ -126,7 +124,7 @@ public class PackageParser21 extends PackageParser {
         /* public static final ServiceInfo generateServiceInfo(Service s, int flags,
             PackageUserState state, int userId)*/
         return (ServiceInfo) ReflectMethodUtils.invokeStaticMethod(mPackageParser,
-                "generateServiceInfo",
+                "generateServiceInfo", false,
                 service, flags, mDefaultPackageUserState, mUserId);
     }
 
@@ -135,7 +133,7 @@ public class PackageParser21 extends PackageParser {
          /*  public static final ProviderInfo generateProviderInfo(Provider p, int flags,
             PackageUserState state, int userId) */
         return (ProviderInfo) ReflectMethodUtils.invokeStaticMethod(mPackageParser,
-                "generateProviderInfo",
+                "generateProviderInfo",false,
                 provider, flags, mDefaultPackageUserState, mUserId);
     }
 
@@ -144,7 +142,7 @@ public class PackageParser21 extends PackageParser {
          /*  public static final InstrumentationInfo generateInstrumentationInfo(
             Instrumentation i, int flags)*/
         return (InstrumentationInfo) ReflectMethodUtils.invokeStaticMethod(mPackageParser,
-                "generateInstrumentationInfo",
+                "generateInstrumentationInfo",false,
                 instrumentation, flags);
     }
 
@@ -153,7 +151,7 @@ public class PackageParser21 extends PackageParser {
         /* public static ApplicationInfo generateApplicationInfo(Package p, int flags,
             PackageUserState state, int userId) */
         return (ApplicationInfo) ReflectMethodUtils.invokeStaticMethod(mPackageParser,
-                "generateApplicationInfo",
+                "generateApplicationInfo",false,
                 mPackage, flags, mDefaultPackageUserState, mUserId);
     }
 
@@ -162,7 +160,7 @@ public class PackageParser21 extends PackageParser {
          /*  public static final PermissionGroupInfo generatePermissionGroupInfo(
             PermissionGroup pg, int flags)*/
         return (PermissionGroupInfo) ReflectMethodUtils.invokeStaticMethod(mPackageParser,
-                "generatePermissionGroupInfo",
+                "generatePermissionGroupInfo",false,
                 permissionGroup, flags);
     }
 
@@ -171,7 +169,7 @@ public class PackageParser21 extends PackageParser {
         //public static final PermissionInfo generatePermissionInfo(
         //          Permission p, int flags) {
         return (PermissionInfo) ReflectMethodUtils.invokeStaticMethod(mPackageParser,
-                "generatePermissionInfo",
+                "generatePermissionInfo",false,
                 permission, flags);
     }
 
@@ -182,7 +180,7 @@ public class PackageParser21 extends PackageParser {
         //            HashSet<String> grantedPermissions, PackageUserState state)
 
         try {
-            Method method = ReflectMethodUtils.findMethod(sPackageParserClass, "generatePackageInfo",
+            Method method = ReflectMethodUtils.findMethod(sPackageParserClass, "generatePackageInfo", true,
                     mPackage.getClass(),
                     int[].class, int.class, long.class, long.class, Set.class, sPackageUserStateClass, int.class);
             return (PackageInfo) method.invoke(null, mPackage, gids, flags, firstInstallTime, lastUpdateTime, grantedPermissions, mDefaultPackageUserState, mUserId);
@@ -190,7 +188,7 @@ public class PackageParser21 extends PackageParser {
         }
 
         try {
-            Method method = ReflectMethodUtils.findMethod(sPackageParserClass, "generatePackageInfo",
+            Method method = ReflectMethodUtils.findMethod(sPackageParserClass, "generatePackageInfo",true,
                     mPackage.getClass(),
                     int[].class, int.class, long.class, long.class, HashSet.class, sPackageUserStateClass, int.class);
             return (PackageInfo) method.invoke(null, mPackage, gids, flags, firstInstallTime, lastUpdateTime, grantedPermissions, mDefaultPackageUserState, mUserId);
@@ -198,7 +196,7 @@ public class PackageParser21 extends PackageParser {
         }
 
         try {
-            Method method =  ReflectMethodUtils.findMethod(sPackageParserClass, "generatePackageInfo",
+            Method method =  ReflectMethodUtils.findMethod(sPackageParserClass, "generatePackageInfo",true,
                     mPackage.getClass(),
                     int[].class, int.class, long.class, long.class, sArraySetClass, sPackageUserStateClass, int.class);
 
@@ -215,7 +213,7 @@ public class PackageParser21 extends PackageParser {
         }
 
         return (PackageInfo) ReflectMethodUtils.invokeMethod(mPackageParser,
-                "generatePackageInfo",
+                "generatePackageInfo",false,
                 mPackage, gids, flags, firstInstallTime, lastUpdateTime, grantedPermissions, mDefaultPackageUserState);
     }
 
