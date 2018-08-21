@@ -14,6 +14,5 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         PluginManager.getInstance().init(this);
-        PluginManager.getInstance().connectToService();
     }
 }

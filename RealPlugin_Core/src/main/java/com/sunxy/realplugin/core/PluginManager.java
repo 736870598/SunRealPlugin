@@ -4,9 +4,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.sunxy.realplugin.hook.HookFactory;
 import com.sunxy.realplugin.pm.IPluginManager;
 
 /**
@@ -30,6 +33,8 @@ public class PluginManager implements ServiceConnection {
 
     public void init(Context context){
         mHostContext = context;
+        PluginManager.getInstance().connectToService();
+        HookFactory.getInstance().installHook(context, context.getClassLoader());
     }
 
     public void connectToService(){
@@ -59,5 +64,35 @@ public class PluginManager implements ServiceConnection {
                 e.printStackTrace();
             }
             return -1;
+    }
+
+    public ActivityInfo resolveActivityInfo(Intent intent, int flags) throws RemoteException {
+        if (mPluginManager != null){
+            return mPluginManager.getActivityInfo(intent.getComponent(), flags);
+        }
+        return null;
+    }
+
+    public ActivityInfo selectProxyActivity(Intent intent) {
+        if (mPluginManager!=null) {
+            try {
+                return mPluginManager.selectStubActivityInfoByIntent(intent);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public ApplicationInfo getApplicationInfo(ComponentName componentName, int flag) {
+
+        if (mPluginManager != null) {
+            try {
+                return mPluginManager.getApplicationInfo(componentName.getPackageName(), flag);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return  null;
     }
 }

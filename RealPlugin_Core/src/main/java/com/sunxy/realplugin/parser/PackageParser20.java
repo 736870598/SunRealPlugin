@@ -24,7 +24,7 @@ public class PackageParser20 extends PackageParser21{
         DisplayMetrics metrics = new DisplayMetrics();
         metrics.setToDefaults();
         String destCodePath = file.getPath();
-        mPackageParser = ReflectMethodUtils.invokeConstructor(sPackageParserClass, destCodePath);
+        mPackageParser = ReflectMethodUtils.invokeConstructor(sPackageParserClass, true, destCodePath);
         mPackage = ReflectMethodUtils.invokeMethod(mPackageParser,
                 "parsePackage", false
                 , file, destCodePath, metrics, flags);

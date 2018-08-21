@@ -27,9 +27,9 @@ public class PackageParser22 extends PackageParser21 {
             return super.generatePackageInfo(gids, flags, firstInstallTime, lastUpdateTime, grantedPermissions);
         } catch (Exception e) {
         }
-        Method method = ReflectMethodUtils.findMethod(sPackageParserClass, "generatePackageInfo",
-                mPackage.getClass(),
-                int[].class, int.class, long.class, long.class, sArraySetClass, sPackageUserStateClass, int.class);
+        Method method = ReflectMethodUtils.findMethod(sPackageParserClass,
+                "generatePackageInfo", true,
+                mPackage.getClass(), int[].class, int.class, long.class, long.class, sArraySetClass, sPackageUserStateClass, int.class);
         Object grantedPermissionsArray = null;
         try {
             Constructor constructor = sArraySetClass.getConstructor(Collection.class);

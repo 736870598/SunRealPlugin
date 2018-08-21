@@ -35,6 +35,15 @@ public class ReflectFieldUtils {
     }
 
     /**
+     * 获取Field
+     */
+    public static Object readStaticField(Class<?> clazz, String name)
+            throws NoSuchFieldException, IllegalAccessException {
+        Field field = findField(clazz, name);
+        return field.get(null);
+    }
+
+    /**
      * 找Field
      */
     private static Field findField(Class<?> clazz, String name)

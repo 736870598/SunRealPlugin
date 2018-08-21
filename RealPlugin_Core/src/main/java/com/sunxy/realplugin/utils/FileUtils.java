@@ -25,14 +25,19 @@ public class FileUtils {
 
     public static String getPluginDataPath(Context context, String packageName){
         File pluginFile = getPluginFile(context, packageName);
-        File pluginDataFile = new File(pluginFile, "data");
-        return enforceFileExists(pluginDataFile);
+        File pluginDataFile = new File(pluginFile + "/data");
+        return enforceDirExists(pluginDataFile);
     }
 
     public static String getPluginNativeLibraryPath(Context context, String packageName){
         File pluginFile = getPluginFile(context, packageName);
-        File pluginDataFile = new File(pluginFile, "lib");
-        return enforceFileExists(pluginDataFile);
+        File pluginDataFile = new File(pluginFile + "/lib");
+        return enforceDirExists(pluginDataFile);
+    }
+    public static String getPluginDalvikCacheDir(Context context, String packageName){
+        File pluginFile = getPluginFile(context, packageName);
+        File pluginDataFile = new File(pluginFile + "/dalvik-cache");
+        return enforceDirExists(pluginDataFile);
     }
 
     public static File getPluginFile(Context context, String packageName){

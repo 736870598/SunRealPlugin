@@ -8,6 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/PluginC" />
             <option value="$PROJECT_DIR$/RealPlugin_Core" />
             <option value="$PROJECT_DIR$/app" />
           </set>

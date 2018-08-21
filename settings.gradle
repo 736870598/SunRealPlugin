@@ -1,1 +1,1 @@
-include ':app', ':RealPlugin_Core'
+include ':app', ':RealPlugin_Core', ':PluginC'

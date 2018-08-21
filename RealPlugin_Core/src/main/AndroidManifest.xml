@@ -6,36 +6,201 @@
 
     <application>
 
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P01$Standard" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P01$SingleTop" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P01$SingleTask" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P01$SingleInstance" />
-
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P02$Standard" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P02$SingleTop" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P02$SingleTask" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P02$SingleInstance" />
-
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P03$Standard" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P03$SingleTop" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P03$SingleTask" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P03$SingleInstance" />
-
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P04$Standard" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P04$SingleTop" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P04$SingleTask" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P04$SingleInstance" />
-
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P05$Standard" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P05$SingleTop" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P05$SingleTask" />
-        <activity android:name="com.sunxy.realplugin.activity.ActivityMode$P05$SingleInstance" />
-
-
         <service android:name=".core.PluginManagerService"
-
+            android:process=":PluginService"
             />
-            <!--android:process=":PluginService" -->
+        <!--android:process=":PluginService" -->
+
+
+
+        <!--       01              -->
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P01$Standard"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="standard"
+            android:process=":PluginP01"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P01$SingleTop"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:process=":PluginP01"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P01$SingleTask"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:process=":PluginP01"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P01$SingleInstance"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:process=":PluginP01"  />
+
+
+        <!--       04              -->
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P02$Standard"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="standard"
+            android:process=":PluginP02"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P02$SingleTop"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:process=":PluginP02"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P02$SingleTask"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:process=":PluginP02"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P02$SingleInstance"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:process=":PluginP02"  />
+
+
+        <!--       03              -->
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P03$Standard"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="standard"
+            android:process=":PluginP03"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P03$SingleTop"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:process=":PluginP03"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P03$SingleTask"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:process=":PluginP03"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P03$SingleInstance"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:process=":PluginP03"  />
+
+
+        <!--       04              -->
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P04$Standard"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="standard"
+            android:process=":PluginP04"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P04$SingleTop"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:process=":PluginP04"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P04$SingleTask"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:process=":PluginP04"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P04$SingleInstance"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:process=":PluginP04"  />
+
+
+        <!--       05              -->
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P05$Standard"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="standard"
+            android:process=":PluginP05"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P05$SingleTop"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:process=":PluginP05"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P05$SingleTask"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
+            android:process=":PluginP05"  />
+
+        <activity
+            android:name="com.sunxy.realplugin.activity.ActivityMode$P05$SingleInstance"
+            android:allowTaskReparenting="true"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:process=":PluginP05"  />
 
 
     </application>

@@ -14,13 +14,15 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.os.RemoteException;
-import android.util.Log;
 
+import com.sunxy.realplugin.am.ActivityManageService;
 import com.sunxy.realplugin.parser.PluginPackageMap;
 import com.sunxy.realplugin.utils.FileUtils;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * -- 自定义 packageManagerService。
@@ -30,9 +32,14 @@ import java.util.List;
 public class PackageManagerService extends IPluginManager.Stub{
 
     private Context mContext;
+    private ActivityManageService activityManageService;
+    private Map<String, PluginPackageMap> pluginAllMap = new HashMap<>(20);
+
+
 
     public PackageManagerService(Context mContext) {
         this.mContext = mContext;
+        activityManageService = new ActivityManageService(mContext);
     }
 
     public void main(){
@@ -53,13 +60,14 @@ public class PackageManagerService extends IPluginManager.Stub{
                 //解析apk
                 try {
                     PluginPackageMap pluginPackageMap = new PluginPackageMap(mContext, apkFile);
+                    pluginAllMap.put(pluginPackageMap.getPackageName(), pluginPackageMap);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+        activityManageService.onCreate(PackageManagerService.this);
     }
-
 
     /**
      * 安装
@@ -74,18 +82,53 @@ public class PackageManagerService extends IPluginManager.Stub{
         //解析apk
         try {
             PluginPackageMap pluginPackageMap = new PluginPackageMap(mContext, new File(apkPath));
-            Log.v("sunxy", "--" + pluginPackageMap.toString());
+            pluginAllMap.put(pluginPackageMap.getPackageName(), pluginPackageMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
         return 0;
     }
+
 
     @Override
     public int deletePackage(String packageName, int flags) throws RemoteException {
         return 0;
+    }
+
+    @Override
+    public ApplicationInfo getApplicationInfo(String packageName, int flags) throws RemoteException {
+        PluginPackageMap pluginPackageMap = pluginAllMap.get(packageName);
+        if (pluginPackageMap != null){
+            try {
+                return pluginPackageMap.getApplicationInfo(flags);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public ActivityInfo getActivityInfo(ComponentName className, int flags) throws RemoteException {
+        PluginPackageMap pluginPackageMap = pluginAllMap.get(className.getPackageName());
+        if (pluginPackageMap != null){
+            return pluginPackageMap.getActivityInfo(className, flags);
+        }
+        return null;
+    }
+
+    @Override
+    public ActivityInfo selectStubActivityInfoByIntent(Intent targetIntent) throws RemoteException {
+        ActivityInfo activityInfo = getActivityInfo(targetIntent.getComponent(), 0);
+        if (activityInfo != null){
+            selectProxyActivity(activityInfo);
+        }
+        return activityInfo;
+    }
+
+    private void selectProxyActivity(ActivityInfo ai) {
+
     }
 
     @Override
@@ -101,11 +144,6 @@ public class PackageManagerService extends IPluginManager.Stub{
     @Override
     public boolean isPluginPackage(String packageName) throws RemoteException {
         return false;
-    }
-
-    @Override
-    public ActivityInfo getActivityInfo(ComponentName className, int flags) throws RemoteException {
-        return null;
     }
 
     @Override
@@ -189,12 +227,6 @@ public class PackageManagerService extends IPluginManager.Stub{
     }
 
     @Override
-    public ApplicationInfo getApplicationInfo(String packageName, int flags) throws RemoteException {
-        return null;
-    }
-
-
-    @Override
     public List<ActivityInfo> getReceivers(String packageName, int flags) throws RemoteException {
         return null;
     }
@@ -211,11 +243,6 @@ public class PackageManagerService extends IPluginManager.Stub{
 
     @Override
     public ActivityInfo selectStubActivityInfo(ActivityInfo targetInfo) throws RemoteException {
-        return null;
-    }
-
-    @Override
-    public ActivityInfo selectStubActivityInfoByIntent(Intent targetIntent) throws RemoteException {
         return null;
     }
 

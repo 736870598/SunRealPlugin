@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -97,8 +98,11 @@ public class PackageParser21 extends PackageParser {
     public void parsePackage(File packageFile, int flags) throws Exception {
         //         PackageParser.parsePackage()
         mPackageParser = sPackageParserClass.newInstance();
-        Method parsePackage = ReflectUtils.findMethod(mPackageParser, "parsePackage", File.class, int.class);
-        mPackage = parsePackage.invoke(mPackageParser, packageFile, flags);
+        mPackage = ReflectMethodUtils.invokeMethod(mPackageParser,
+                "parsePackage", false,
+                packageFile, flags);
+//        Method parsePackage = ReflectUtils.findMethod(mPackageParser, "parsePackage", File.class, int.class);
+//        mPackage = parsePackage.invoke(mPackageParser, packageFile, flags);
     }
 
     @Override

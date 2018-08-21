@@ -90,17 +90,32 @@ public class ReflectMethodUtils {
                 if (args[i] instanceof Integer){
                     aClass = int.class;
                 }
+                else if(args[i] instanceof Integer[]){
+                    aClass = int[].class;
+                }
                 else if(args[i] instanceof Float){
                     aClass = float.class;
+                }
+                else if(args[i] instanceof Float[]){
+                    aClass = float[].class;
                 }
                 else if(args[i] instanceof Double){
                     aClass = double.class;
                 }
+                else if(args[i] instanceof Double[]){
+                    aClass = double[].class;
+                }
                 else if(args[i] instanceof Long){
                     aClass = long.class;
                 }
+                else if(args[i] instanceof Long[]){
+                    aClass = long[].class;
+                }
                 else if(args[i] instanceof Short){
                     aClass = short.class;
+                }
+                else if(args[i] instanceof Short[]){
+                    aClass = short[].class;
                 }
                 else{
                     aClass = args[i].getClass();
