@@ -13,7 +13,9 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
+import android.os.Binder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.sunxy.realplugin.am.ActivityManageService;
 import com.sunxy.realplugin.parser.PluginPackageMap;
@@ -121,13 +123,16 @@ public class PackageManagerService extends IPluginManager.Stub{
     @Override
     public ActivityInfo selectStubActivityInfoByIntent(Intent targetIntent) throws RemoteException {
         ActivityInfo activityInfo = getActivityInfo(targetIntent.getComponent(), 0);
+        Log.v("sunxyy", "activityInfo: " + activityInfo.processName);
         if (activityInfo != null){
-            selectProxyActivity(activityInfo);
+            return selectProxyActivity(activityInfo);
         }
-        return activityInfo;
+        return null;
     }
 
-    private void selectProxyActivity(ActivityInfo ai) {
+    private ActivityInfo selectProxyActivity(ActivityInfo ai) {
+        return activityManageService.selectStubActivityInfo(Binder.getCallingPid(),
+                Binder.getCallingUid(), ai);
 
     }
 
@@ -293,7 +298,7 @@ public class PackageManagerService extends IPluginManager.Stub{
 
     @Override
     public void onActivityCreated(ActivityInfo stubInfo, ActivityInfo targetInfo) throws RemoteException {
-
+        activityManageService.onActivityCreated(Binder.getCallingPid(), Binder.getCallingUid(), stubInfo, targetInfo);
     }
 
     @Override

@@ -137,7 +137,8 @@ public class PluginPackageMap {
         if (applicationInfo.dataDir == null) {
             applicationInfo.dataDir = FileUtils.getPluginDataPath(mHostContext, applicationInfo.packageName);
         }
-        applicationInfo.uid = mHostPackageInfo.applicationInfo.uid;
+//        applicationInfo.uid = mHostPackageInfo.applicationInfo.uid;
+        applicationInfo.uid = mHostContext.getApplicationInfo().uid;
         if (applicationInfo.nativeLibraryDir == null) {
             applicationInfo.nativeLibraryDir = FileUtils.getPluginNativeLibraryPath(mHostContext, applicationInfo.packageName);
         }
@@ -151,6 +152,13 @@ public class PluginPackageMap {
         return mPackageName;
     }
 
+
+    private PackageInfo fixPackageInfo(PackageInfo packageInfo) {
+        packageInfo.gids = mHostPackageInfo.gids;
+        fixApplicationInfo(packageInfo.applicationInfo);
+        return packageInfo;
+    }
+
     public ActivityInfo getActivityInfo(ComponentName className, int flag){
         ActivityInfo activityInfo = mActivityInfoCache.get(className);
         fixApplicationInfo(activityInfo.applicationInfo);
@@ -158,7 +166,7 @@ public class PluginPackageMap {
             activityInfo.processName = activityInfo.packageName;
             return activityInfo;
         }
-        return null;
+        return activityInfo;
     }
 
     public ApplicationInfo getApplicationInfo(int flags) throws Exception {

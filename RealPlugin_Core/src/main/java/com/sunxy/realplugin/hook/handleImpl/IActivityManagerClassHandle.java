@@ -55,17 +55,18 @@ public class IActivityManagerClassHandle extends BaseClassHandle {
         }
 
         private ComponentName selectProxyActivity(Intent intent){
-//            if (intent != null){
-//                Log.v("sunxiaoyu", "selectProxyActivity");
-//                ActivityInfo proxyInfo = PluginManager.getInstance().selectProxyActivity(intent);
-//                Log.v("sunxiaoyu", proxyInfo.name);
-//                if (proxyInfo != null){
-//                    return new ComponentName(proxyInfo.packageName, proxyInfo.name);
-//                }
-//            }
-//            return null;
+            if (intent != null){
+                Log.v("sunxyy", "intent: " + intent);
+                ActivityInfo proxyInfo = PluginManager.getInstance().selectProxyActivity(intent);
+                Log.v("sunxyy", "proxyInfo: " + proxyInfo);
+                if (proxyInfo != null){
+                    Log.v("sunxyy", "proxyInfo.name: " + proxyInfo.name);
+                    return new ComponentName(proxyInfo.packageName, proxyInfo.name);
+                }
+            }
+            return null;
 //            return new ComponentName("com.sunxy.realplugin", "com.sunxy.realplugin.activity.ActivityMode$P01$Standard");
-            return new ComponentName("com.sunxy.sunrealplugin", "com.sunxy.sunrealplugin.SecondActivity");
+//            return new ComponentName("com.sunxy.sunrealplugin", "com.sunxy.sunrealplugin.SecondActivity");
         }
 
         private int findFirstIntentIndexInArgs(Object[] args){

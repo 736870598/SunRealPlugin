@@ -55,6 +55,5 @@ public class IPackageManagerHook extends BaseProxyHook {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
-
     }
 }

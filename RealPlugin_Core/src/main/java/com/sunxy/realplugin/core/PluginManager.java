@@ -95,4 +95,14 @@ public class PluginManager implements ServiceConnection {
         }
         return  null;
     }
+
+    public void onActivityCreated(ActivityInfo stubInfo, ActivityInfo targetInfo) throws RemoteException {
+        try {
+            if (mPluginManager != null) {
+                mPluginManager.onActivityCreated(stubInfo, targetInfo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

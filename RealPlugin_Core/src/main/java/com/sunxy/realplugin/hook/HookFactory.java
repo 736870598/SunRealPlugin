@@ -7,6 +7,7 @@ import com.sunxy.realplugin.hook.base.BaseHook;
 import com.sunxy.realplugin.hook.hookImpl.IActivityManagerHook;
 import com.sunxy.realplugin.hook.hookImpl.IHandleHook;
 import com.sunxy.realplugin.hook.hookImpl.IPackageManagerHook;
+import com.sunxy.realplugin.hook.hookImpl.InstrumentationHook;
 import com.sunxy.realplugin.utils.ReflectMethodUtils;
 import com.sunxy.realplugin.utils.ReflectUtils;
 
@@ -40,6 +41,7 @@ public class HookFactory {
             installHook(new IActivityManagerHook(context), classLoader);
             installHook(new IPackageManagerHook(context), classLoader);
             installHook(new IHandleHook(context), classLoader);
+            installHook(new InstrumentationHook(context), classLoader);
         }
     }
 
