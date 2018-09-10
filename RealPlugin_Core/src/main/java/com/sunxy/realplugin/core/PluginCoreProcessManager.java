@@ -3,7 +3,9 @@ package com.sunxy.realplugin.core;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.util.Log;
 
+import com.sunxy.realplugin.compat.ActivityThreadCompat;
 import com.sunxy.realplugin.utils.FileUtils;
 import com.sunxy.realplugin.utils.ReflectFieldUtils;
 import com.sunxy.realplugin.utils.ReflectMethodUtils;
@@ -34,14 +36,11 @@ public class PluginCoreProcessManager {
         try {
 
             //1. 得到activityThread对象
-            Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
-            Method currentActivityThreadMethod = ReflectUtils.findMethod(activityThreadClass, "currentActivityThread");
-            Object currentActivityThread = currentActivityThreadMethod.invoke(null);
-
+            Object currentActivityThread = ActivityThreadCompat.currentActivityThread();
 
             //2. 获取activityThread对象中的mPackages对象
             //  final ArrayMap<String, WeakReference<LoadedApk>> mPackages = new ArrayMap<>();
-            Field mPackagesField = ReflectUtils.findField(activityThreadClass, "mPackages");
+            Field mPackagesField = ReflectUtils.findField(currentActivityThread, "mPackages");
             Map mPackages = (Map) mPackagesField.get(currentActivityThread);
 
             //3. 将apk加载成loadedApk，添加到mPackages中
@@ -49,7 +48,7 @@ public class PluginCoreProcessManager {
             // 3.1 拿到ActivityThread中的getPackageInfoNoCheck方法。反射时优先拿public的方法。
             // public final LoadedApk getPackageInfoNoCheck(ApplicationInfo ai, CompatibilityInfo compatInfo)
             Class<?> compatibilityInfoClass = Class.forName("android.content.res.CompatibilityInfo");
-            Method getPackageInfoNoCheckMethod = ReflectUtils.findMethod(activityThreadClass, "getPackageInfoNoCheck",
+            Method getPackageInfoNoCheckMethod = ReflectUtils.findMethod(currentActivityThread, "getPackageInfoNoCheck",
                     ApplicationInfo.class, compatibilityInfoClass);
 
             // 3.2 获取3.1方法中需要的CompatibilityInfo对象
@@ -59,6 +58,7 @@ public class PluginCoreProcessManager {
 
             // 3.3 获取3.1方法中需要的 ApplicationInfo 对象
             ApplicationInfo applicationInfo = PluginManager.getInstance().getApplicationInfo(componentName, 0);
+            Log.v("sunxiaoyu", "applicationInfo -> " + applicationInfo);
 
             // 3.4 生成loadApk文件
             Object loadedApk = getPackageInfoNoCheckMethod.invoke(currentActivityThread, applicationInfo, defaultCompatibilityInfo);

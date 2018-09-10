@@ -3,6 +3,7 @@ package com.sunxy.realplugin.hook.hookImpl;
 import android.content.Context;
 import android.os.Handler;
 
+import com.sunxy.realplugin.compat.ActivityThreadCompat;
 import com.sunxy.realplugin.hook.base.BaseClassHandle;
 import com.sunxy.realplugin.hook.base.BaseHook;
 import com.sunxy.realplugin.hook.handleImpl.ActivityMH;
@@ -33,10 +34,7 @@ public class IHandleHook extends BaseHook {
     @Override
     public void onInit(ClassLoader classLoader) {
         try {
-            Class<?> forName = Class.forName("android.app.ActivityThread");
-            Object activityThreadObj = ReflectMethodUtils.invokeStaticMethod(forName, "currentActivityThread", true);
-
-            Handler mH = (Handler) ReflectFieldUtils.readField(activityThreadObj, "mH");
+            Handler mH = ActivityThreadCompat.mH();
             Field mCallbackField = ReflectUtils.findField(mH, "mCallback");
 
             mCallbackField.set(mH, new ActivityMH(mHostContext, mH));

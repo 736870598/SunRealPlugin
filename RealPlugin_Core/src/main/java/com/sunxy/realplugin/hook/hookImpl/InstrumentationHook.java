@@ -34,8 +34,7 @@ public class InstrumentationHook extends BaseHook{
     public void onInit(ClassLoader classLoader) {
         try {
             Object target = ActivityThreadCompat.currentActivityThread();
-            Class ActivityThreadClass = ActivityThreadCompat.activityThreadClass();
-            Instrumentation mInstrumentation = (Instrumentation) ReflectFieldUtils.readStaticField(ActivityThreadClass, "mInstrumentation");
+            Instrumentation mInstrumentation = (Instrumentation) ReflectFieldUtils.readField(target, "mInstrumentation");
 
             PluginInstrumentation pit = new PluginInstrumentation(mHostContext, mInstrumentation);
             pit.setEnable(isEnable());

@@ -19,11 +19,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
 
+    public void startAct(View v){
+        startActivity(new Intent(this, SecondActivity.class));
+    }
+
     public void installApk(View v){
        String apkPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/sunxy_file/plugin/pc.apk";
         int result = PluginManager.getInstance().installPackage(apkPath, 0);
         Log.v("sunxiaoyu", "result : " + result);
-//       startActivity(new Intent(this, SecondActivity.class));
     }
 
     public void jump(View view){

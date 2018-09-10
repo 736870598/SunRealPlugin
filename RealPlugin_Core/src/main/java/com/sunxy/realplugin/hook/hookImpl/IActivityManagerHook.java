@@ -3,12 +3,15 @@ package com.sunxy.realplugin.hook.hookImpl;
 import android.content.Context;
 import android.os.Build;
 
+import com.sunxy.realplugin.compat.ActivityThreadCompat;
 import com.sunxy.realplugin.hook.base.BaseClassHandle;
 import com.sunxy.realplugin.hook.base.BaseProxyHook;
 import com.sunxy.realplugin.hook.handleImpl.IActivityManagerClassHandle;
+import com.sunxy.realplugin.utils.ReflectFieldUtils;
 import com.sunxy.realplugin.utils.ReflectUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 
 /**
@@ -32,16 +35,12 @@ public class IActivityManagerHook extends BaseProxyHook {
     @Override
     public void onInit(ClassLoader classLoader) {
         try {
+
             Object IActivityManager;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                Class<?> forName = Class.forName("android.app.ActivityManager");
-                Field defaultField =  ReflectUtils.findField(forName, "IActivityManagerSingleton");
-                IActivityManager = defaultField.get(null);
+                IActivityManager = ReflectFieldUtils.readStaticField(Class.forName("android.app.ActivityManager"), "IActivityManagerSingleton");
             }else{
-                Class<?> forName = Class.forName("android.app.ActivityManagerNative");
-                Field defaultField = ReflectUtils.findField(forName, "gDefault");
-                //gDefault的变量值（IActivityManager）
-                IActivityManager = defaultField.get(null);
+                IActivityManager = ReflectFieldUtils.readStaticField(Class.forName("android.app.ActivityManagerNative"), "gDefault");
             }
 
             //反射Singleton

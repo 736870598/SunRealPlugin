@@ -1,7 +1,13 @@
 package com.sunxy.realplugin.compat;
 
-import com.sunxy.realplugin.utils.ReflectMethodUtils;
+import android.os.Build;
+import android.os.Handler;
 
+import com.sunxy.realplugin.utils.ReflectFieldUtils;
+import com.sunxy.realplugin.utils.ReflectMethodUtils;
+import com.sunxy.realplugin.utils.ReflectUtils;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -13,6 +19,8 @@ public class ActivityThreadCompat {
 
     private static Object sActivityThread;
     private static Class sClass = null;
+    private static Object iActivityManager;
+    private static Handler mH;
 
     public static final Class activityThreadClass() throws ClassNotFoundException {
         if (sClass == null){
@@ -26,5 +34,12 @@ public class ActivityThreadCompat {
             sActivityThread = ReflectMethodUtils.invokeStaticMethod(activityThreadClass(), "currentActivityThread", true);
         }
         return sActivityThread;
+    }
+
+    public synchronized static final Handler mH() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
+        if (mH == null){
+            mH = (Handler) ReflectFieldUtils.readField(currentActivityThread(), "mH");
+        }
+        return mH;
     }
 }

@@ -27,7 +27,6 @@ public class BaseMethodHandle {
         userMyResult = null;
         try {
             boolean suc = beforeInvoke(receiver, method, args);
-            Log.v("sunxiaoyu", "suc : " + args[2].toString());
             if (!suc){
                 userMyResult = method.invoke(receiver, args);
             }

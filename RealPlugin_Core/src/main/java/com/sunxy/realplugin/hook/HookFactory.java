@@ -3,6 +3,7 @@ package com.sunxy.realplugin.hook;
 import android.content.Context;
 import android.nfc.cardemulation.OffHostApduService;
 
+import com.sunxy.realplugin.compat.ActivityThreadCompat;
 import com.sunxy.realplugin.hook.base.BaseHook;
 import com.sunxy.realplugin.hook.hookImpl.IActivityManagerHook;
 import com.sunxy.realplugin.hook.hookImpl.IHandleHook;
@@ -34,44 +35,15 @@ public class HookFactory {
     }
 
     public final void installHook(Context context, ClassLoader classLoader){
-        if (isPluginService()){
-            //插件进程
-        }else{
+//        if (isPluginService()){
+//            //插件进程
+//        }else{
             //宿主进程
             installHook(new IActivityManagerHook(context), classLoader);
             installHook(new IPackageManagerHook(context), classLoader);
             installHook(new IHandleHook(context), classLoader);
             installHook(new InstrumentationHook(context), classLoader);
-        }
-    }
-
-
-    private boolean isPluginService(){
-        String processName = getProcessName();
-        if (processName != null){
-            return processName.contains(":Plugin");
-        }
-        return false;
-    }
-    /**
-     * 获取进程名。
-     */
-    private String getProcessName(){
-        try {
-            Class<?> ActivityThread = Class.forName("android.app.ActivityThread");
-            Object am = ReflectMethodUtils.invokeStaticMethod(ActivityThread, "currentActivityThread", true);
-            Method getProcessName = ReflectUtils.findMethod(ActivityThread, "getProcessName");
-            return (String) getProcessName.invoke(am);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return null;
+//        }
     }
 
 }

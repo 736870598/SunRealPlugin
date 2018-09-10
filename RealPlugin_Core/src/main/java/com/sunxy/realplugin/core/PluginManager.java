@@ -8,9 +8,18 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.text.TextUtils;
+import android.util.Log;
 
+import com.sunxy.realplugin.compat.ActivityThreadCompat;
 import com.sunxy.realplugin.hook.HookFactory;
 import com.sunxy.realplugin.pm.IPluginManager;
+import com.sunxy.realplugin.utils.ReflectUtils;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * --
@@ -21,6 +30,7 @@ public class PluginManager implements ServiceConnection {
 
     private IPluginManager mPluginManager;
     private Context mHostContext;
+    private String processName;
 
     private final static PluginManager ourInstance = new PluginManager();
 
@@ -35,24 +45,31 @@ public class PluginManager implements ServiceConnection {
         mHostContext = context;
         PluginManager.getInstance().connectToService();
         HookFactory.getInstance().installHook(context, context.getClassLoader());
+        Log.v("sunxiaoyu", "pluginManager init end");
     }
 
-    public void connectToService(){
+    public synchronized void connectToService(){
         if (mPluginManager == null){
             Intent intent = new Intent(mHostContext, PluginManagerService.class);
             mHostContext.startService(intent);
             mHostContext.bindService(intent, this, Context.BIND_AUTO_CREATE);
         }
+        Log.v("sunxiaoyu", "connectToService");
     }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         mPluginManager = IPluginManager.Stub.asInterface(service);
+        Log.v("sunxiaoyu", "onServiceConnected : " + mPluginManager);
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
+        mPluginManager = null;
+    }
 
+    public boolean isConnected() {
+        return mHostContext != null && mPluginManager != null;
     }
 
     public int installPackage(String filePath, int flags){
@@ -85,7 +102,6 @@ public class PluginManager implements ServiceConnection {
     }
 
     public ApplicationInfo getApplicationInfo(ComponentName componentName, int flag) {
-
         if (mPluginManager != null) {
             try {
                 return mPluginManager.getApplicationInfo(componentName.getPackageName(), flag);
@@ -104,5 +120,35 @@ public class PluginManager implements ServiceConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isPluginService(){
+        if (TextUtils.isEmpty(processName)){
+            processName = getProcessName();
+        }
+        if (processName != null){
+            return processName.contains(":Plugin");
+        }
+        return false;
+    }
+
+    /**
+     * 获取进程名。
+     */
+    private String getProcessName(){
+        try {
+            Object currentActivityThread = ActivityThreadCompat.currentActivityThread();
+            Method getProcessName = ReflectUtils.findMethod(currentActivityThread, "getProcessName");
+            return (String) getProcessName.invoke(currentActivityThread);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

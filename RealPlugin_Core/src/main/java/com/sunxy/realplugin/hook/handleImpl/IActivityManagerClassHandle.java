@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.util.Log;
 
+import com.sunxy.realplugin.core.Env;
 import com.sunxy.realplugin.core.PluginManager;
 import com.sunxy.realplugin.hook.base.BaseClassHandle;
 import com.sunxy.realplugin.hook.base.BaseMethodHandle;
@@ -36,6 +37,7 @@ public class IActivityManagerClassHandle extends BaseClassHandle {
             super(context);
         }
 
+        private boolean isFirst = true;
 
         @Override
         protected boolean beforeInvoke(Object receiver, Method method, Object[] args) throws Exception {
@@ -44,11 +46,17 @@ public class IActivityManagerClassHandle extends BaseClassHandle {
                 Intent realIntent = (Intent) args[intentIndexOfArgs];
                 if (!mHostContext.getApplicationInfo().packageName.equals( realIntent.getComponent().getPackageName())){
                     // 跳转的不是本apk的，需要设置
-                    Intent proxyIntent = new Intent();
                     ComponentName componentName = selectProxyActivity(realIntent);
-                    proxyIntent.setComponent(componentName);
-                    proxyIntent.putExtra("realIntent", realIntent);
-                    args[intentIndexOfArgs] = proxyIntent;
+                    if (componentName != null){
+                        Intent proxyIntent = new Intent();
+                        proxyIntent.setComponent(componentName);
+//                        if (isFirst){
+//                            isFirst = false;
+//                        }else{
+                            proxyIntent.putExtra(Env.EXTRA_TARGET_INTENT, realIntent);
+//                        }
+                        args[intentIndexOfArgs] = proxyIntent;
+                    }
                 }
             }
             return false;
@@ -56,17 +64,12 @@ public class IActivityManagerClassHandle extends BaseClassHandle {
 
         private ComponentName selectProxyActivity(Intent intent){
             if (intent != null){
-                Log.v("sunxyy", "intent: " + intent);
                 ActivityInfo proxyInfo = PluginManager.getInstance().selectProxyActivity(intent);
-                Log.v("sunxyy", "proxyInfo: " + proxyInfo);
                 if (proxyInfo != null){
-                    Log.v("sunxyy", "proxyInfo.name: " + proxyInfo.name);
                     return new ComponentName(proxyInfo.packageName, proxyInfo.name);
                 }
             }
             return null;
-//            return new ComponentName("com.sunxy.realplugin", "com.sunxy.realplugin.activity.ActivityMode$P01$Standard");
-//            return new ComponentName("com.sunxy.sunrealplugin", "com.sunxy.sunrealplugin.SecondActivity");
         }
 
         private int findFirstIntentIndexInArgs(Object[] args){

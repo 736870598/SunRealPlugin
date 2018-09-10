@@ -100,7 +100,9 @@ public class PackageManagerService extends IPluginManager.Stub{
 
     @Override
     public ApplicationInfo getApplicationInfo(String packageName, int flags) throws RemoteException {
+        Log.v("sunxiaoyu", "pluginAllMap -> " + pluginAllMap.size());
         PluginPackageMap pluginPackageMap = pluginAllMap.get(packageName);
+        Log.v("sunxiaoyu", "pluginPackageMap -> " + pluginPackageMap);
         if (pluginPackageMap != null){
             try {
                 return pluginPackageMap.getApplicationInfo(flags);

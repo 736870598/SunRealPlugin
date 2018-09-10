@@ -24,15 +24,16 @@ public class ReflectUtils {
      * 找不到的话就去他的 父类 中找
      */
     public static Field findField(Class<?> clazz, String name) throws NoSuchFieldException{
-        while (clazz != null){
+        Class<?> nowClazz = clazz;
+        while (nowClazz != null){
             try {
-                Field field = clazz.getDeclaredField(name);
+                Field field = nowClazz.getDeclaredField(name);
                 if (!field.isAccessible()){
                     field.setAccessible(true);
                 }
                 return field;
             } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();
+                nowClazz = nowClazz.getSuperclass();
             }
         }
         throw new NoSuchFieldException("Field " + name + " not found in " + clazz);
@@ -53,16 +54,17 @@ public class ReflectUtils {
      */
     public static Method findMethod(Class<?> clazz, String name, Class... parameterTypes)
             throws NoSuchMethodException{
-        while (clazz != null){
+        Class<?> nowClazz = clazz;
+        while (nowClazz != null){
             try {
-                Method method = clazz.getDeclaredMethod(name, parameterTypes);
+                Method method = nowClazz.getDeclaredMethod(name, parameterTypes);
                 if (!method.isAccessible()) {
                     method.setAccessible(true);
                 }
                 return method;
             } catch (NoSuchMethodException e) {
                 //如果找不到往父类找
-                clazz = clazz.getSuperclass();
+                nowClazz = nowClazz.getSuperclass();
             }
         }
         throw new NoSuchMethodException("Method " + name + " with parameters " + Arrays.asList

@@ -32,63 +32,62 @@ public class ActivityManageService {
 
     public ActivityInfo selectStubActivityInfo(int callingPid, int callingUid, ActivityInfo targetInfo) {
 
-        String stubPlugin = mRunningProcessList.getStubProcessByTarget(targetInfo);
-        if (stubPlugin != null){
-            //进程已经起来了
-            List<ActivityInfo> stubInfos = mStaticProcessList.getActivityInfoForProcessName(stubPlugin);
-            for (ActivityInfo activityInfo : stubInfos) {
-                //启动模式一样。
-                if (activityInfo.launchMode == targetInfo.launchMode){
-                    if (activityInfo.launchMode == ActivityInfo.LAUNCH_MULTIPLE){
-                        mRunningProcessList.setTargetProcessName(activityInfo, targetInfo);
-                        return activityInfo;
-                    }else if(mRunningProcessList.isStubInfoUsed(activityInfo, targetInfo, stubPlugin)){
-                        mRunningProcessList.setTargetProcessName(activityInfo, targetInfo);
-                        return activityInfo;
+        //先从正在运行的进程中查找看是否有符合条件的进程，如果有则直接使用之
+        String stubProcessName1 = mRunningProcessList.getStubProcessByTarget(targetInfo);
+        if (stubProcessName1 != null) {
+            List<ActivityInfo> stubInfos = mStaticProcessList.getActivityInfoForProcessName(stubProcessName1);
+            for (ActivityInfo stubInfo : stubInfos) {
+                if (stubInfo.launchMode == targetInfo.launchMode) {
+                    //ActivityInfo.LAUNCH_MULTIPLE   ===  standard
+                    if (stubInfo.launchMode == ActivityInfo.LAUNCH_MULTIPLE) {
+                        mRunningProcessList.setTargetProcessName(stubInfo, targetInfo);
+                        return stubInfo;
+                    } else if (!mRunningProcessList.isStubInfoUsed(stubInfo, targetInfo, stubProcessName1)) {
+                        mRunningProcessList.setTargetProcessName(stubInfo, targetInfo);
+                        return stubInfo;
                     }
                 }
             }
-        }else{
-            //进程没有起来
-            List<String> stubProcssNames = mStaticProcessList.getProcessNames();
-            for (String stubProcssName : stubProcssNames) {
-                List<ActivityInfo> stubInfos = mStaticProcessList.getActivityInfoForProcessName(stubProcssName);
-                if (!mRunningProcessList.isProcessRunning(stubProcssName)){
-                    // 进程没有运行
+        }
+
+        List<String> stubProcessNames = mStaticProcessList.getProcessNames();
+        for (String stubProcessName : stubProcessNames) {
+            List<ActivityInfo> stubInfos = mStaticProcessList.getActivityInfoForProcessName(stubProcessName);
+            if (mRunningProcessList.isProcessRunning(stubProcessName)) {//该预定义的进程正在运行。
+                if (mRunningProcessList.isPkgEmpty(stubProcessName)) {//空进程，没有运行任何插件包。
                     for (ActivityInfo stubInfo : stubInfos) {
-                        if (stubInfo.launchMode == ActivityInfo.LAUNCH_MULTIPLE){
-                            mRunningProcessList.setTargetProcessName(stubInfo, targetInfo);
-                            return stubInfo;
-                        }else if(!mRunningProcessList.isStubInfoUsed(stubInfo, targetInfo, stubPlugin)){
-                            mRunningProcessList.setTargetProcessName(stubInfo, targetInfo);
-                            return stubInfo;
-                        }
-                    }
-                }else{
-                    // 进程运行
-                    if (mRunningProcessList.isProcessRunning(stubProcssName)){
-                        if (mRunningProcessList.isPkgEmpty(stubProcssName)){
-                            for (ActivityInfo stubInfo : stubInfos) {
-                                if (stubInfo.launchMode == targetInfo.launchMode){
-                                    if (stubInfo.launchMode == ActivityInfo.LAUNCH_MULTIPLE){
-                                        mRunningProcessList.setTargetProcessName(stubInfo, targetInfo);
-                                        return stubInfo;
-                                    }else if(!mRunningProcessList.isStubInfoUsed(stubInfo, targetInfo, stubProcssName)){
-                                        mRunningProcessList.setTargetProcessName(stubInfo,targetInfo);
-                                        return stubInfo;
-                                    }
-                                }
+                        if (stubInfo.launchMode == targetInfo.launchMode) {
+                            if (stubInfo.launchMode == ActivityInfo.LAUNCH_MULTIPLE) {
+                                mRunningProcessList.setTargetProcessName(stubInfo, targetInfo);
+                                return stubInfo;
+                            } else if (!mRunningProcessList.isStubInfoUsed(stubInfo, targetInfo, stubProcessName1)) {
+                                mRunningProcessList.setTargetProcessName(stubInfo, targetInfo);
+                                return stubInfo;
                             }
                         }
                     }
+                    throw new RuntimeException("没有找到合适的StubInfo");
                 }
+            } else { //该预定义的进程没有。
+                for (ActivityInfo stubInfo : stubInfos) {
+                    if (stubInfo.launchMode == targetInfo.launchMode) {
+                        if (stubInfo.launchMode == ActivityInfo.LAUNCH_MULTIPLE) {
+                            mRunningProcessList.setTargetProcessName(stubInfo, targetInfo);
+                            return stubInfo;
+                        } else if (!mRunningProcessList.isStubInfoUsed(stubInfo, targetInfo, stubProcessName1)) {
+                            mRunningProcessList.setTargetProcessName(stubInfo, targetInfo);
+                            return stubInfo;
+                        }
+                    }
+                }
+                throw new RuntimeException("没有找到合适的StubInfo");
             }
-
-
         }
-        return null;
+        throw new RuntimeException("没有可用的进程了");
+
     }
 
     public void onActivityCreated(int callingPid, int callingUid, ActivityInfo stubInfo, ActivityInfo targetInfo) {
+        mRunningProcessList.addActivityInfo(callingPid, callingUid, stubInfo, targetInfo);
     }
 }

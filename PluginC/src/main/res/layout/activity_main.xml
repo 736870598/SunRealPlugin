@@ -9,5 +9,10 @@
         android:text="插件中的按钮，点击试下"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/toast"
+        android:text="toasttoast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

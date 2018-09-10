@@ -2,6 +2,7 @@ package com.sunxy.realplugin.hook.hookImpl;
 
 import android.content.Context;
 
+import com.sunxy.realplugin.compat.ActivityThreadCompat;
 import com.sunxy.realplugin.hook.base.BaseClassHandle;
 import com.sunxy.realplugin.hook.base.BaseProxyHook;
 import com.sunxy.realplugin.hook.handleImpl.IPackageManagerClassHandle;
@@ -33,10 +34,8 @@ public class IPackageManagerHook extends BaseProxyHook {
     @Override
     public void onInit(ClassLoader classLoader) {
         try {
-            Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
-            Object activityThreadObj = ReflectMethodUtils.invokeStaticMethod(activityThreadClass, "currentActivityThread", true);
-
-            Field sPackageManagerField = ReflectUtils.findField(activityThreadClass, "sPackageManager");
+            Object activityThreadObj = ActivityThreadCompat.currentActivityThread();
+            Field sPackageManagerField = ReflectUtils.findField(ActivityThreadCompat.activityThreadClass(), "sPackageManager");
             Object sPackageManager = sPackageManagerField.get(activityThreadObj);
             setRealObj(sPackageManager);
             Class<?> iPackageManagerInterface = Class.forName("android.content.pm.IPackageManager");

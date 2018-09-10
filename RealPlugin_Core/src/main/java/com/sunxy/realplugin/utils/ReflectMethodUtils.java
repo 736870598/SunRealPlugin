@@ -17,6 +17,7 @@ public class ReflectMethodUtils {
 
     /**
      * 创建类
+     * isPackage 是否包装类型
      */
     public static Object invokeConstructor(Class clazz, boolean isPackage, Object...args)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -26,6 +27,7 @@ public class ReflectMethodUtils {
 
     /**
      * 执行静态方法。
+     * isPackage 是否包装类型
      */
     public static Object invokeStaticMethod(Object object, String name, boolean isPackage, Object...args)
             throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
@@ -34,6 +36,7 @@ public class ReflectMethodUtils {
 
     /**
      * 执行静态方法。
+     * isPackage 是否包装类型
      */
     public static Object invokeStaticMethod(Class clazz, String name, boolean isPackage, Object...args)
             throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
@@ -43,6 +46,7 @@ public class ReflectMethodUtils {
 
     /**
      * 执行普通非静态方法。
+     * isPackage 是否包装类型
      */
     public static Object invokeMethod(Object object, String name, boolean isPackage, Object...args)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -52,6 +56,7 @@ public class ReflectMethodUtils {
 
     /**
      * 获取方法。
+     * isPackage 是否包装类型
      */
     public static Method findMethod(Class clazz, String name, boolean isPackage, Object...args) throws NoSuchMethodException {
          String methodName = getMethodName(clazz, name);
